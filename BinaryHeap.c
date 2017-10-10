@@ -4,6 +4,9 @@
 #include "BinaryHeap.h"
 #include <stdlib.h>
 
+#define HEAPIFY_UP     0
+#define HEAPIFY_DOWN   1
+
 // Define an element in a heap. Contains
 // - key:       the element's priority
 // - data:      the data
@@ -19,10 +22,11 @@ typedef struct Node {
     struct Node* parent;
 } Node;
 
-// Define Binary Heap. Keep track of size and pointer to root
+// Define Binary Heap. Keep track of size and pointer to root and lastNode
 struct BinaryHeap {
     size_t size;
     Node* root;
+    Node* lastNode;
 };
 
 BinaryHeap* createHeap(void) {
@@ -86,9 +90,15 @@ int insert(BinaryHeap* heap, void* data, double key) {
 }
 
 Node* extract_min(BinaryHeap* heap) {
+    if heap->size < 1 {
+        printf("ERROR: HEAP UNDERFLOW\n");
+        return NULL;
+    }
+    
+    Node* min = heap->root;
+    Node* max = heap->lastNode;
 
-    while
-    return NULL;
+
     
 }
 
