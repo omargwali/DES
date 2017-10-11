@@ -29,8 +29,10 @@ struct BinaryHeap {
 // create heap
 BinaryHeap* createHeap(void) {
     BinaryHeap* heap = malloc(sizeof(BinaryHeap));
-    if (heap == NULL)
+    if (heap == NULL) {
+        printf("Heap Null\n");
         return NULL;
+    }
     
     heap->size = 0;
     heap->root = NULL;
@@ -61,16 +63,19 @@ Node* getLastNode(BinaryHeap* heap) {
         printf("Heap Empty.\n");
         return NULL;
     } else {
-        while (node->left == NULL && node->right == NULL) {
+        int route = hs & 1;
+        printf("get last 1\n");
+        while (node->left != NULL && node->right != NULL) {
+            printf("get last while\n");
             // find route by extracting last bit with bitwise and operation
             // then right shift for next iteration
             // if bit is 0 we go left and if 1 we go right
-            int route = hs & 1;
-            hs = hs >> 1;
             node = (route == 0) ? node->left : node->right;
+            hs = hs >> 1;
+            route = hs & 1;
         }
-
-        return node;
+        printf("get last post while\n");
+        return (route == 0) ? node->left : node->right;;
     }
 }
 
@@ -84,34 +89,55 @@ int insert(BinaryHeap* heap, void* data, double key) {
     //edge case for null root
     if (node == NULL) {
     	node = malloc(sizeof(Node));
+
     	node->key = key;
     	node->data = data;
+        node->parent = NULL;
+        node->left = NULL;
+        node->right = NULL;
+
         heap->root = node;
+        heap->size = heap->size + 1;
+
+        printf("edge case insert\n");
+        return 1;
     } else {
     	//while loop to traverse heap till insertion point (which will be node with null
     	// children)
-        Node* previousNode;
-        while (node != NULL) {
+        int route = hs & 1;
+        printf("insert 1\n");
+        while (node->left != NULL || node->right != NULL) {
+            printf("insert while\n");
         	// find route by extracting last bit with bitwise and operation
         	// then right shift for next iteration
         	// if bit is 0 we go left and if 1 we go right
-        	int route = hs & 1;
-        	hs = hs >> 1;
-            previousNode = node;
         	node = (route == 0) ? node->left : node->right;
+            hs = hs >> 1;
+            route = hs & 1;
+        }
+        printf("insert 2\n");
+        //insertion point reached
+        printf("route: %d\n", route)
+;        Node* newNode;
+        if (route) {
+            node->right = malloc(sizeof(Node)); 
+            newNode = node->right;
+        } else {
+            node->left = malloc(sizeof(Node));
+            newNode = node->left;
         }
 
-        //insertion point reached
-        node = malloc(sizeof(Node));
-        node->parent = previousNode;
-    	node->key = key;
-    	node->data = data;
+        newNode->parent = node;
+        newNode->left = NULL;
+        newNode->right = NULL;
+    	newNode->key = key;
+    	newNode->data = data;
     }
 
     int isHeapified;
 
-    isHeapified = heapify_up(heap);
     heap->size = heap->size + 1;
+    isHeapified = heapify_up(heap);
     if (isHeapified) {
     	printf("Heapify successful.\n");
         return 1;
@@ -154,11 +180,39 @@ size_t size(BinaryHeap* heap) {
 int heapify_up(BinaryHeap* heap) {
 //initialize pointers for all relevant nodes to be updated
     printf("Heap up\n");
-    if (heap->size < 1) return 1;
     Node* lastNode = getLastNode(heap);
     Node* parent = lastNode->parent;
-    Node* grandParent = parent->parent;
+    printf("heap up after getLast, hs : %zu\n", heap->size);
+    //edge case for heap with 2 levels
+    if (heap->size == 2) {
+        printf("edge case heap up\n");
+        printf("%f %f\n", lastNode->key, parent->key);
+        int shouldSwap = (lastNode->key < parent->key);
+        printf("edge case heap up\n");
+        if (shouldSwap) {
 
+            heap->root = lastNode;
+            lastNode->left = parent;
+            lastNode->right = NULL;
+            lastNode->parent = NULL;
+            parent->left = NULL;
+        } 
+
+        return 1;
+    } else if (heap->size == 3) {
+        int shouldSwap = lastNode->key < parent->key;
+        if (shouldSwap) {
+            heap->root = lastNode;
+            lastNode->left = parent->left;
+            lastNode->right = parent;
+            lastNode->parent = NULL;
+            parent->left = NULL;
+            parent->right = NULL;
+        }
+        return 1;
+    } 
+
+    Node* grandParent = parent->parent;
     //check if last node key is less than parent key violating heap property
     //loop until property is false
     while (lastNode->key < parent->key) {
