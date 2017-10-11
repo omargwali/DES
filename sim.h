@@ -21,6 +21,12 @@ void Schedule (double ts, void *data);
 // This function returns the current simulation time
 double CurrentTime (void);
 
+// Uniformly distributed random value between 0 and 1
+double urand(void);
+
+// Random value on exponential distribution with a given mean
+double randexp(double mean);
+
 //
 // Function defined in the simulation application called by the simulation engine
 //
