@@ -17,7 +17,6 @@ int AtPump=0;	// #vehicles at the pump or waiting to use it; 0 if pump is free
 #define	ARRIVAL     1
 #define	DEPARTURE   2
 
-
 /*
 Data Structures for Event
 */
