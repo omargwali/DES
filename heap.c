@@ -127,7 +127,6 @@ int insert(BinaryHeap* heap, void* data, double key) {
         nodeLeft->right = NULL;
 
         node->left = nodeLeft;
-        heapify_up(heap);
         heap->size = heap->size + 1;
     } else if (hs == 2) {
         Node* nodeRight;
@@ -140,7 +139,6 @@ int insert(BinaryHeap* heap, void* data, double key) {
         nodeRight->right = NULL;
 
         node->right = nodeRight;
-        heapify_up(heap);
         heap->size = heap->size + 1;
     } else {
         unsigned int hs = (unsigned int) heap->size + 1;
@@ -356,13 +354,9 @@ int main() {
     BinaryHeap* priorityQueue = createHeap();
 
     
-    insert(priorityQueue, NULL, 2);
-    insert(priorityQueue, NULL, 1);
-    insert(priorityQueue, NULL, 3);
-    insert(priorityQueue, NULL, 5);
-    insert(priorityQueue, NULL, 4);
-    insert(priorityQueue, NULL, 6);
 
+
+    
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
     printf("%d, %f\n", 2, priorityQueue->root->right->key);
