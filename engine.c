@@ -9,8 +9,6 @@ Data Structures: Include BinaryHeap file
 
 */
 
-#include "BinaryHeap.h"
-
 typedef struct Event {
 	double timestamp;		// event timestamp
     void *AppData;			// pointer to event parameters
