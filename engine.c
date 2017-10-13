@@ -9,16 +9,13 @@ Data Structures: Include BinaryHeap file
 
 */
 
-#include "BinaryHeap.h"
+#include "heap.h"
 
-typedef struct Event {
-	double timestamp;		// event timestamp
-    void *AppData;			// pointer to event parameters
-	struct Event *Next;		// priority queue pointer
-} Event;
 
-// Simulation clock variable and Event Root Node
-Event FEl = NULL;
+
+
+// Simulation clock variable and BinaryHeap creation
+BinaryHeap* priorityQueue = createHeap();
 double Now = 0.0;
 
 // Uniformly distributed random value between 0 and 1
@@ -32,5 +29,21 @@ double randexp(double mean) {
 	return x;
 }
 
+double CurrentTime (void) {
+	return (Now);
+}
 
+void Schedule(double ts, void* data) {
+	insert(priorityQueue, data, ts);
+}
+
+void RunSim(double EndTime) {
+	while (priorityQueue->root != NULL) {
+		Now = priorityQueue->root->key;
+		if (Now > EndTime) break;
+		Node* event = extract_min(priorityQueue);
+		EventHandler(event->data);
+		free(event);
+	}
+}
 

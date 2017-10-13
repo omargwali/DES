@@ -128,6 +128,7 @@ int insert(BinaryHeap* heap, void* data, double key) {
 
         node->left = nodeLeft;
         heap->size = heap->size + 1;
+        heapify_up(heap);
     } else if (hs == 2) {
         Node* nodeRight;
         nodeRight = malloc(sizeof(Node));
@@ -140,6 +141,7 @@ int insert(BinaryHeap* heap, void* data, double key) {
 
         node->right = nodeRight;
         heap->size = heap->size + 1;
+        heapify_up(heap);
     } else {
         unsigned int hs = (unsigned int) heap->size + 1;
 
@@ -191,6 +193,8 @@ Node* extract_min(BinaryHeap* heap) {
         return NULL;
     } else if (heap->size == 1) {
         return heap->root;
+    } else if (heap->size == 0) {
+        return NULL;
     }
     
     Node* min = heap->root;
@@ -226,6 +230,29 @@ int heapify_up(BinaryHeap* heap) {
     printf("post set family\n");
     //check if last node key is less than parent key violating heap property
     //loop until property is false
+    if (heap->size == 2) {
+        int swap = lastNode->key < parent->key;
+        if (swap) {
+            heap->root = lastNode;
+            lastNode->left = lastNode->parent;
+            lastNode->parent->left = NULL;
+            lastNode->parent->parent = lastNode;
+            lastNode->parent = NULL; 
+        }
+        return 1;
+    } else if (heap->size == 3) {
+        int swap = lastNode->key < parent->key;
+
+        if (swap) {
+            heap->root = lastNode;
+            lastNode->right = lastNode->parent;
+            lastNode->left = lastNode->parent->left; 
+            lastNode->parent->left = NULL;
+            lastNode->parent->right = NULL;
+            lastNode->parent->parent = lastNode;
+            lastNode->parent = NULL; 
+        }
+    }
     while (lastNode->key < parent->key) {
 
         printf("heap up while\n");
@@ -354,18 +381,12 @@ int main() {
     BinaryHeap* priorityQueue = createHeap();
 
     
-
-
-    
-    printf("%d, %f\n", 0, priorityQueue->root->key);
-    printf("%d, %f\n", 1, priorityQueue->root->left->key);
-    printf("%d, %f\n", 2, priorityQueue->root->right->key);
-    printf("%d, %f\n", 3, priorityQueue->root->left->left->key);
-    printf("%d, %f\n", 4, priorityQueue->root->left->right->key);
-    printf("%d, %f\n", 5, priorityQueue->root->right->left->key);
-    printf("%d, %f\n", 6, priorityQueue->root->right->right->key);
-
-    extract_min(priorityQueue);
+    insert(priorityQueue, NULL, 3);
+    insert(priorityQueue, NULL, 1);
+    insert(priorityQueue, NULL, 6);
+    insert(priorityQueue, NULL, 8);
+    insert(priorityQueue, NULL, 4);
+    insert(priorityQueue, NULL, 7);
 
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
@@ -376,30 +397,37 @@ int main() {
     //printf("%d, %f\n", 6, priorityQueue->root->right->right->key);
 
     extract_min(priorityQueue);
+
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
     printf("%d, %f\n", 2, priorityQueue->root->right->key);
     printf("%d, %f\n", 3, priorityQueue->root->left->left->key);
     printf("%d, %f\n", 4, priorityQueue->root->left->right->key);
-    
+    //printf("%d, %f\n", 5, priorityQueue->root->right->left->key);
+    //printf("%d, %f\n", 6, priorityQueue->root->right->right->key);
+
     extract_min(priorityQueue);
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
     printf("%d, %f\n", 2, priorityQueue->root->right->key);
     printf("%d, %f\n", 3, priorityQueue->root->left->left->key);
-
-
+    //printf("%d, %f\n", 4, priorityQueue->root->left->right->key);
+    
     extract_min(priorityQueue);
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
     printf("%d, %f\n", 2, priorityQueue->root->right->key);
+    //printf("%d, %f\n", 3, priorityQueue->root->left->left->key);
+
 
     extract_min(priorityQueue);
     printf("%d, %f\n", 0, priorityQueue->root->key);
     printf("%d, %f\n", 1, priorityQueue->root->left->key);
+    //printf("%d, %f\n", 2, priorityQueue->root->right->key);
 
     extract_min(priorityQueue);
     printf("%d, %f\n", 0, priorityQueue->root->key);
+    //printf("%d, %f\n", 1, priorityQueue->root->left->key);
 
     Node* end = extract_min(priorityQueue);
     printf("%d, %f\n", 0, end->key);
