@@ -158,7 +158,7 @@ void Arrival (struct EventData *e) {
                   d->car = e->car;
                   
                   Schedule(ts, d);
-                  printf("\nCar %d Entry Scheduled at Time t = %f\n", ts);
+                  printf("\nCar %d Entry Scheduled at Time t = %f\n", d->car, ts);
                   
               }
               
@@ -355,5 +355,5 @@ int main (void) {
     Schedule (ts, d);
     printf("\nArrival Scheduled at Time t = %f\n", ts);
     
-    RunSim(100.0);
+    RunSim(50.0);
 }
